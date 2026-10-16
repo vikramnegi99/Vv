@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper Trading Research Terminal</title>
+<style>
+:root { --bg:#0b0f14; --card:#121922; --line:#1f2a37; --fg:#e6edf3; --muted:#8b98a5;
+        --ok:#3ddc97; --warn:#ffcc66; --bad:#ff6b6b; --accent:#4c8dff; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--fg);
+       font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+.topbar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:12px 16px;
+          background:#0e141b; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; }
+.badge { padding:3px 10px; border-radius:999px; font-weight:700; font-size:12px; }
+.badge.ok { background:rgba(61,220,151,.15); color:var(--ok); }
+.badge.warn { background:rgba(255,204,102,.15); color:var(--warn); }
+.badge.bad { background:rgba(255,107,107,.15); color:var(--bad); }
+.badge.muted { background:#1b2530; color:var(--muted); }
+.pill { background:#141c25; border:1px solid var(--line); border-radius:999px;
+        padding:3px 10px; font-size:12px; color:var(--muted); }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; padding:12px 16px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px;
+        margin:0 16px 12px; overflow:hidden; }
+.grid .card { margin:0; }
+.card h2 { margin:0 0 10px; font-size:13px; letter-spacing:.06em; text-transform:uppercase;
+           color:var(--muted); font-weight:600; }
+table { width:100%; border-collapse:collapse; }
+table.kv th { text-align:left; color:var(--muted); font-weight:500; padding:4px 0; }
+table.kv td { text-align:right; padding:4px 0; font-variant-numeric:tabular-nums; }
+table.data th, table.data td { padding:6px 8px; border-bottom:1px solid var(--line);
+        text-align:left; font-size:12.5px; white-space:nowrap; }
+table.data td.q { white-space:normal; max-width:220px; }
+table.data thead th { color:var(--muted); font-weight:600; position:sticky; top:0; background:var(--card); }
+.scroll { overflow-x:auto; }
+.spark { width:100%; height:110px; display:block; }
+.foot { display:flex; gap:14px; align-items:center; flex-wrap:wrap; padding:10px 16px 40px; }
+button { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:8px 14px;
+         font-size:13px; cursor:pointer; }
+.muted { color:var(--muted); }
+@media (max-width:520px) { .card { margin:0 10px 10px; } .grid { padding:10px; gap:10px; } }
+</style>
+</head>
+<body>
+
+<div class="topbar"><span class="badge ok">RUNNING</span><span class="pill">PAPER ONLY &middot; REAL_TRADING=false</span><span class="pill">Last scan: never</span><span class="pill">Now: 2026-10-16T16:48:43+00:00</span><span class="pill">Elapsed: 0.0h / 45h</span><span class="pill">Provider: - (down)</span></div>
+<div class="grid">
+  <section class="card"><h2>Capital</h2><table class="kv"><tr><th>Starting capital</th><td>$0.00</td></tr><tr><th>Current balance (cash)</th><td>$0.00</td></tr><tr><th>Current equity</th><td>$0.00</td></tr><tr><th>Lifetime P&amp;L</th><td>$0.00</td></tr><tr><th>24h P&amp;L</th><td>$0.00</td></tr><tr><th>Return %</th><td>0.00%</td></tr><tr><th>Max drawdown</th><td>0.00%</td></tr><tr><th>Available cash</th><td>$0.00</td></tr><tr><th>Open exposure</th><td>$0.00</td></tr></table></section>
+  <section class="card"><h2>Challenge</h2><table class="kv"><tr><th>Hours elapsed</th><td>0.0 / 45</td></tr><tr><th>Hours remaining</th><td>45.0h</td></tr><tr><th>First-trade deadline</th><td>24.0h left</td></tr><tr><th>First-trade requirement</th><td>PENDING</td></tr><tr><th>Challenge status</th><td>PENDING</td></tr><tr><th>Strategy score (realized P&amp;L)</th><td>$0.00</td></tr><tr><th>Strategy trades</th><td>0</td></tr><tr><th>Exploration trades</th><td>0</td></tr><tr><th>Canary tests</th><td>0 (not run)</td></tr><tr><th>Exploration orders used</th><td>0 / 3</td></tr></table></section>
+  <section class="card"><h2>Signal funnel</h2><table class="kv"><tr><th>Markets discovered</th><td>-</td></tr><tr><th>Eligible markets</th><td>-</td></tr><tr><th>Candidates</th><td>-</td></tr><tr><th>Markets analyzed</th><td>-</td></tr><tr><th>Strategy signals</th><td>-</td></tr><tr><th>Signals rejected</th><td>-</td></tr><tr><th>Risk-approved orders</th><td>-</td></tr><tr><th>Paper orders executed</th><td>-</td></tr></table></section>
+  <section class="card"><h2>Equity curve</h2><div class="muted">Not enough data for an equity curve yet.</div></section>
+  <section class="card"><h2>Rejection analytics</h2><table class="data"><thead><tr><th>Reason</th><th>Count</th><th>%</th></tr></thead><tbody><tr><td colspan="3" class="muted">No rejections recorded yet.</td></tr></tbody></table></section>
+  <section class="card"><h2>System health</h2><table class="kv"><tr><th>Last successful cycle</th><td>-</td></tr><tr><th>Last cycle</th><td>-</td></tr><tr><th>Last API response</th><td>-</td></tr><tr><th>API latency</th><td>- ms</td></tr><tr><th>Data freshness</th><td>no scan yet</td></tr><tr><th>Database health</th><td>ok</td></tr><tr><th>Scheduler health</th><td>ok</td></tr><tr><th>Config version</th><td>cfg-2026.10</td></tr><tr><th>Strategy version</th><td>baseline-meanrev-v1</td></tr><tr><th>Software version</th><td>2.0.0</td></tr></table></section>
+</div>
+<section class="card"><h2>Trade history</h2><div class="scroll"><table class="data"><thead><tr><th>Time</th><th>Instrument</th><th>Side</th><th>Type</th><th>Entry</th><th>Exit</th><th>Qty</th><th>Fees</th><th>Slip</th><th>Realized P&L</th><th>Status</th></tr></thead><tbody><tr><td colspan="11" class="muted">No trades yet.</td></tr></tbody></table></div></section>
+<div class="foot">
+  <button onclick="location.reload()">Refresh</button>
+  <label><input type="checkbox" id="auto" onchange="toggleAuto()"> Auto-refresh (60s)</label>
+  <span class="muted">Last updated: 2026-10-16T16:48:43+00:00</span>
+</div>
+
+<script>
+let t=null;
+function toggleAuto(){
+  const on=document.getElementById('auto').checked;
+  if(t){clearInterval(t);t=null;}
+  if(on){t=setInterval(()=>location.reload(),60000);}
+}
+</script>
+</body>
+</html>

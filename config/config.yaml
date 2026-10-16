@@ -1,0 +1,88 @@
+# ---------------------------------------------------------------------------
+# Autonomous Paper Trading Agent - single source of truth for configuration.
+# All thresholds used by the signal / cost / risk pipeline live here.
+# Nothing is hard-coded inside the strategy or analyzer modules.
+# ---------------------------------------------------------------------------
+meta:
+  software_version: "2.0.0"
+  strategy_version: "baseline-meanrev-v1"
+  config_version: "cfg-2026.10"
+
+capital:
+  starting_capital: 1000.00
+  currency: USD
+
+storage:
+  db_path: "data/state.db"
+  backup_dir: "data/backups"
+
+# Hard safety limits. Conservative paper-testing defaults, NOT an optimal
+# strategy. The agent must never raise these automatically.
+risk:
+  max_position_pct: 0.01          # 1% of current equity per standard order
+  max_total_exposure_pct: 0.15    # 15% of current equity aggregate open exposure
+  max_daily_loss_pct: 0.03        # 3% of the day's starting equity
+  max_drawdown_pct: 0.10          # 10% peak-to-trough -> LOCKED pending review
+  max_open_positions: 10
+  exploration_max_stake: 2.00     # hard $ cap for a single exploration order
+  exploration_max_orders: 3       # hard cap across the 45h challenge
+  exploration_enable_hour: 12     # exploration unlocks at hour 12 if no strategy trade
+  min_order_notional: 0.50        # below this an order is not worth placing
+
+# Simulated transaction costs (enabled and recorded on every fill).
+costs:
+  fee_bps: 20                     # 0.20% of notional per side
+  slippage_bps: 10                # 0.10% adverse slippage per fill
+
+strategy:
+  min_edge: 0.05                  # estimated_prob - market_prob must exceed this
+  min_confidence: 0.55
+  max_spread: 0.06
+  min_liquidity: 5000.0
+  max_data_age_seconds: 900       # 15 minutes
+  probability_floor: 0.02         # clamp only; must NOT create artificial edge
+  probability_ceiling: 0.98
+  estimator:
+    momentum_window: 6            # points used for short-term drift
+    smoothing_window: 12          # points used for the anchor average
+    momentum_weight: 0.35         # blend weight on drift vs anchor
+    shrinkage: 0.15               # pull estimate toward the market price
+  min_history_points: 4           # fewer than this and we hold
+  max_trades_per_scan: 3          # never force more trades than this in one scan
+  # Bounded exploratory policy. Lower edge/confidence bars than production,
+  # but every data-quality, liquidity, cost and risk gate still applies.
+  exploration:
+    min_edge: 0.02
+    min_confidence: 0.35
+
+challenge:
+  deadline_hours: 45
+  first_trade_deadline_hours: 24
+  scan_interval_minutes: 10
+  max_scan_gap_minutes: 30        # a larger gap => missed-schedule warning
+
+provider:
+  primary: polymarket
+  polymarket:
+    gamma_base: "https://gamma-api.polymarket.com"
+    clob_base: "https://clob.polymarket.com"
+    max_markets: 60
+    max_analyze: 25                 # cap on markets we pull history for
+    min_volume: 10000.0
+    request_timeout: 15
+  coinbase:
+    base: "https://api.exchange.coinbase.com"
+    products: ["BTC-USD", "ETH-USD"]
+    request_timeout: 15
+  mock:
+    seed: 42
+
+# Permanently disabled. There is no code path that enables it.
+safety:
+  real_trading: false
+  allow_live_endpoints: false
+
+dashboard:
+  output_path: "docs/index.html"
+  title: "Paper Trading Research Terminal"
+  max_trade_rows: 100
