@@ -3,7 +3,8 @@ from agent.models import Market, PricePoint
 from agent.strategy import (
     evaluate_market, R_INSUFFICIENT_EDGE, R_INVALID_PRICE, R_MARKET_INELIGIBLE,
     R_STALE_DATA, R_INSUFFICIENT_HISTORY, R_SPREAD_TOO_WIDE, R_INSUFFICIENT_LIQUIDITY,
-)
+    R_MARKET_NEAR_RESOLVED,
+)  # noqa: F401
 from agent.util import iso, utcnow
 from datetime import timedelta
 
@@ -73,14 +74,38 @@ def test_flat_history_gives_no_edge(cfg):
 
 
 def test_probability_floor_does_not_create_artificial_edge(cfg):
-    # Market at 0.01, no real signal -> estimate clamps to the 0.02 floor,
-    # giving an edge of 0.01 which is still below min_edge (0.05).
+    # A market pinned at 0.01 with no real signal: the estimator clamps up to
+    # the 0.02 floor, but the resulting edge (0.01) is still far below the
+    # minimum edge (0.05), so the clamp cannot manufacture a trade.
+    from agent.estimator import estimate_probability
     market = Market(id="floor", question="floor", provider="mock", yes_price=0.01,
                     bid=0.005, ask=0.015, spread=0.01, liquidity=50000.0,
                     active=True, ts=iso(utcnow()))
-    d = evaluate_market(market, _hist([0.02] * 20), cfg, "STRATEGY")
-    assert d.decision == "HOLD"
-    assert d.reason in (R_INSUFFICIENT_EDGE,)
+    est, _conf, _feats = estimate_probability(market, _hist([0.001] * 20), cfg)
+    assert est >= float(cfg.get_path("strategy.probability_floor"))   # clamped
+    assert abs(est - market.yes_price) < float(cfg.get_path("strategy.min_edge"))
+
+
+def test_near_resolved_market_is_not_traded(cfg, scenario):
+    # A market at 0.9995 is effectively resolved; mean-reversion there is
+    # spurious and the spread cost is punitive. It must be rejected.
+    market, hist = scenario
+    market.yes_price = 0.9995
+    market.bid = 0.999
+    market.ask = 0.9999
+    market.spread = 0.0009
+    d = evaluate_market(market, hist, cfg, "STRATEGY")
+    assert d.decision == "HOLD" and d.reason == R_MARKET_NEAR_RESOLVED
+
+
+def test_near_zero_market_is_not_traded(cfg, scenario):
+    market, hist = scenario
+    market.yes_price = 0.001
+    market.bid = 0.0005
+    market.ask = 0.002
+    market.spread = 0.0015
+    d = evaluate_market(market, hist, cfg, "STRATEGY")
+    assert d.decision == "HOLD" and d.reason == R_MARKET_NEAR_RESOLVED
 
 
 def test_exploration_uses_relaxed_but_bounded_thresholds(cfg, scenario):

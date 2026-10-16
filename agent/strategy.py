@@ -23,11 +23,12 @@ R_INSUFFICIENT_EDGE = "INSUFFICIENT_EDGE"
 R_CONFIDENCE_TOO_LOW = "CONFIDENCE_TOO_LOW"
 R_EDGE_BELOW_COSTS = "EDGE_BELOW_COSTS"
 R_AI_HOLD = "AI_HOLD"
+R_MARKET_NEAR_RESOLVED = "MARKET_NEAR_RESOLVED"
 
 ALL_REASONS = [
     R_MARKET_INELIGIBLE, R_INVALID_PRICE, R_STALE_DATA, R_INSUFFICIENT_HISTORY,
-    R_INSUFFICIENT_LIQUIDITY, R_SPREAD_TOO_WIDE, R_INSUFFICIENT_EDGE,
-    R_CONFIDENCE_TOO_LOW, R_EDGE_BELOW_COSTS, R_AI_HOLD,
+    R_INSUFFICIENT_LIQUIDITY, R_SPREAD_TOO_WIDE, R_MARKET_NEAR_RESOLVED,
+    R_INSUFFICIENT_EDGE, R_CONFIDENCE_TOO_LOW, R_EDGE_BELOW_COSTS, R_AI_HOLD,
 ]
 
 
@@ -77,6 +78,11 @@ def evaluate_market(market: Market, history: list[PricePoint], cfg,
     if market.yes_price is None or not (0.0 < market.yes_price < 1.0):
         stages["validation"] = False
         return hold(R_INVALID_PRICE)
+    min_price = float(cfg.get_path("strategy.min_market_price", 0.05))
+    max_price = float(cfg.get_path("strategy.max_market_price", 0.95))
+    if not (min_price <= market.yes_price <= max_price):
+        stages["validation"] = False
+        return hold(R_MARKET_NEAR_RESOLVED)
     stages["validation"] = True
 
     # --- estimate ----------------------------------------------------------

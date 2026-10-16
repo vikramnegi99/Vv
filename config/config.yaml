@@ -5,8 +5,8 @@
 # ---------------------------------------------------------------------------
 meta:
   software_version: "2.0.0"
-  strategy_version: "baseline-meanrev-v1"
-  config_version: "cfg-2026.10"
+  strategy_version: "baseline-meanrev-v2"
+  config_version: "cfg-2026.10b"
 
 capital:
   starting_capital: 1000.00
@@ -49,6 +49,12 @@ strategy:
     shrinkage: 0.15               # pull estimate toward the market price
   min_history_points: 4           # fewer than this and we hold
   max_trades_per_scan: 3          # never force more trades than this in one scan
+  # Near-certain markets are effectively resolved (the provider's `closed`
+  # flag lags). Mean-reversion on a 0.9995 price produces spurious "edges"
+  # and the bid/ask spread on a huge contract count is punitive, so we only
+  # trade markets whose implied probability sits inside this band.
+  min_market_price: 0.05
+  max_market_price: 0.95
   # Bounded exploratory policy. Lower edge/confidence bars than production,
   # but every data-quality, liquidity, cost and risk gate still applies.
   exploration:

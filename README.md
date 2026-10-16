@@ -82,6 +82,13 @@ data/state.db      persisted state (committed)
 | Exploration stake | $2 per order |
 | Exploration orders | 3 across the challenge |
 | Max open positions | 10 |
+| Tradeable price band | 0.05 – 0.95 implied probability |
+
+Near-certain markets (implied probability outside 0.05–0.95) are treated as
+*effectively resolved* and are not traded: the provider's `closed` flag lags,
+mean-reversion at the extremes is spurious, and the bid/ask spread on the
+resulting huge contract count is punitive. This rule was added after the first
+live scan (see `docs/report.md`) surfaced exactly that failure mode.
 
 The agent never raises these automatically, and never forces a trade to hit a
 deadline or a trade count.
