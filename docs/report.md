@@ -1,6 +1,6 @@
 # Paper Trading Agent - Challenge Report
 
-- Generated: 2026-10-17T16:55:28+00:00
+- Generated: 2026-10-17T18:12:39+00:00
 - Software version: 2.0.0
 - Strategy version: baseline-meanrev-v2
 - Config version: cfg-2026.10b
@@ -8,13 +8,13 @@
 
 ## Bankroll
 - Starting capital: $1000.00
-- Current equity: $987.54
-- Lifetime P&L: $-12.38
-- Max drawdown: 0.73%
+- Current equity: $973.62
+- Lifetime P&L: $-26.30
+- Max drawdown: 2.13%
 
 ## Challenge
-- Status: RUNNING / lifecycle RUNNING
-- Hours elapsed: 24.1
+- Status: RUNNING / lifecycle DEGRADED
+- Hours elapsed: 25.38
 - First-trade requirement met: True
 - Canary completed: False
 - Deadline alert: False
@@ -35,8 +35,9 @@
 - executed: 0
 
 ## Rejection reasons
-- INSUFFICIENT_EDGE: 177
-- MARKET_NEAR_RESOLVED: 93
+- INSUFFICIENT_EDGE: 189
+- MARKET_NEAR_RESOLVED: 105
+- RISK_POSITION_SIZE: 1
 - RISK_DUPLICATE_POSITION: 1
 
 ## Canary detail
