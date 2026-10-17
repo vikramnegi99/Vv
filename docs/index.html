@@ -5,61 +5,81 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paper Trading Research Terminal</title>
 <style>
-:root { --bg:#0b0f14; --card:#121922; --line:#1f2a37; --fg:#e6edf3; --muted:#8b98a5;
-        --ok:#3ddc97; --warn:#ffcc66; --bad:#ff6b6b; --accent:#4c8dff; }
-* { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--fg);
-       font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
-.topbar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:12px 16px;
-          background:#0e141b; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5; }
-.badge { padding:3px 10px; border-radius:999px; font-weight:700; font-size:12px; }
-.badge.ok { background:rgba(61,220,151,.15); color:var(--ok); }
-.badge.warn { background:rgba(255,204,102,.15); color:var(--warn); }
-.badge.bad { background:rgba(255,107,107,.15); color:var(--bad); }
-.badge.muted { background:#1b2530; color:var(--muted); }
-.pill { background:#141c25; border:1px solid var(--line); border-radius:999px;
-        padding:3px 10px; font-size:12px; color:var(--muted); }
-.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; padding:12px 16px; }
-.card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px;
-        margin:0 16px 12px; overflow:hidden; }
-.grid .card { margin:0; }
-.card h2 { margin:0 0 10px; font-size:13px; letter-spacing:.06em; text-transform:uppercase;
-           color:var(--muted); font-weight:600; }
-table { width:100%; border-collapse:collapse; }
-table.kv th { text-align:left; color:var(--muted); font-weight:500; padding:4px 0; }
-table.kv td { text-align:right; padding:4px 0; font-variant-numeric:tabular-nums; }
-table.data th, table.data td { padding:6px 8px; border-bottom:1px solid var(--line);
-        text-align:left; font-size:12.5px; white-space:nowrap; }
-table.data td.q { white-space:normal; max-width:220px; }
-table.data thead th { color:var(--muted); font-weight:600; position:sticky; top:0; background:var(--card); }
-.scroll { overflow-x:auto; }
-.spark { width:100%; height:110px; display:block; }
-.foot { display:flex; gap:14px; align-items:center; flex-wrap:wrap; padding:10px 16px 40px; }
-button { background:var(--accent); color:#fff; border:0; border-radius:8px; padding:8px 14px;
-         font-size:13px; cursor:pointer; }
-.muted { color:var(--muted); }
-@media (max-width:520px) { .card { margin:0 10px 10px; } .grid { padding:10px; gap:10px; } }
+:root{
+  --bg:#070a0f; --card:#101823; --card2:#0c141d; --line:#1e2b3a;
+  --fg:#eef4fa; --muted:#8395ab; --ok:#2ee6a6; --warn:#ffc857;
+  --bad:#ff5d6c; --accent:#4d8dff; --accent2:#8b5cff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%;}
+body{padding-bottom:40px}
+.topbar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px;
+  align-items:center;padding:12px 16px;background:rgba(7,10,15,.94);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.status{font-weight:800;font-size:15px;letter-spacing:.1em;padding:7px 16px;
+  border-radius:999px;border:1px solid transparent}
+.status.ok{color:var(--ok);background:rgba(46,230,166,.12);border-color:rgba(46,230,166,.4)}
+.status.warn{color:var(--warn);background:rgba(255,200,87,.12);border-color:rgba(255,200,87,.4)}
+.status.bad{color:var(--bad);background:rgba(255,93,108,.12);border-color:rgba(255,93,108,.4)}
+.status.muted{color:var(--muted);background:#141d27;border-color:var(--line)}
+.pill{font-size:12px;color:var(--muted);background:#0f1721;border:1px solid var(--line);
+  border-radius:999px;padding:6px 12px;white-space:nowrap}
+.wrap{max-width:1200px;margin:0 auto;padding:16px}
+.alerts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.alert{font-weight:800;font-size:15px;padding:13px 16px;border-radius:12px;
+  border:1px solid rgba(255,93,108,.45);background:rgba(255,93,108,.12);color:#ffd9dd}
+.alert.warn{border-color:rgba(255,200,87,.45);background:rgba(255,200,87,.1);color:#ffe9b8}
+h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  margin:0 0 12px;font-weight:800}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.kpi.hl{border-color:rgba(77,141,255,.5);
+  box-shadow:inset 0 0 0 1px rgba(77,141,255,.14),0 10px 34px -22px rgba(77,141,255,.9)}
+.kpi-label{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);font-weight:800;margin-bottom:7px}
+.kpi-value{font-size:clamp(26px,5.6vw,38px);font-weight:800;line-height:1.02;
+  font-variant-numeric:tabular-nums}
+.kpi-value.hero{font-size:clamp(40px,10vw,68px);letter-spacing:-.02em}
+.kpi-sub{font-size:12.5px;color:var(--muted);margin-top:7px}
+.pos{color:var(--ok)} .neg{color:var(--bad)} .warnc{color:var(--warn)} .accent{color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;margin-top:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px;
+  margin-top:12px}
+.grid2 .card{margin-top:0}
+.progress{height:16px;border-radius:999px;background:#0d1620;border:1px solid var(--line);
+  overflow:hidden;margin:4px 0 14px}
+.progress>i{display:block;height:100%;
+  background:linear-gradient(90deg,var(--accent),var(--accent2))}
+table{width:100%;border-collapse:collapse}
+table.kv th{text-align:left;color:var(--muted);font-weight:600;padding:8px 0;font-size:13px}
+table.kv td{text-align:right;padding:8px 0;font-variant-numeric:tabular-nums;
+  font-weight:800;font-size:15px}
+table.data th,table.data td{padding:9px 11px;border-bottom:1px solid var(--line);
+  font-size:12.5px;text-align:left;white-space:nowrap}
+table.data thead th{color:var(--muted);font-weight:800;background:var(--card)}
+table.data td.q{max-width:260px;overflow:hidden;text-overflow:ellipsis}
+table.data tbody tr:hover{background:rgba(255,255,255,.025)}
+.scroll{overflow-x:auto}
+.spark{width:100%;height:130px;display:block}
+.bar{height:9px;border-radius:6px;background:#0d1620;overflow:hidden;min-width:60px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.foot{max-width:1200px;margin:0 auto;display:flex;gap:14px;align-items:center;
+  flex-wrap:wrap;padding:16px}
+button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:11px 20px;
+  font-size:14px;font-weight:800;cursor:pointer}
+label{font-size:13px;color:var(--muted)}
+.muted{color:var(--muted)}
+@media (max-width:520px){
+  .wrap{padding:12px} .kpi{padding:14px} .topbar{padding:10px 12px}
+  .status{font-size:13px;padding:6px 12px}
+}
 </style>
 </head>
 <body>
-
-<div class="topbar"><span class="badge warn">DEGRADED</span><span class="pill">PAPER ONLY &middot; REAL_TRADING=false</span><span class="pill">Last scan: 2026-10-17T15:58:21+00:00</span><span class="pill">Now: 2026-10-17T15:58:22+00:00</span><span class="pill">Elapsed: 23.1h / 45h</span><span class="pill">Provider: polymarket (ok)</span></div>
-<div class="grid">
-  <section class="card"><h2>Capital</h2><table class="kv"><tr><th>Starting capital</th><td>$1,000.00</td></tr><tr><th>Current balance (cash)</th><td>$979.94</td></tr><tr><th>Current equity</th><td>$992.97</td></tr><tr><th>Lifetime P&amp;L</th><td>$-6.99</td></tr><tr><th>24h P&amp;L</th><td>$0.00</td></tr><tr><th>Return %</th><td>-0.70%</td></tr><tr><th>Max drawdown</th><td>0.18%</td></tr><tr><th>Available cash</th><td>$979.94</td></tr><tr><th>Open exposure</th><td>$20.02</td></tr></table></section>
-  <section class="card"><h2>Challenge</h2><table class="kv"><tr><th>Hours elapsed</th><td>23.1 / 45</td></tr><tr><th>Hours remaining</th><td>21.9h</td></tr><tr><th>First-trade deadline</th><td>0.9h left</td></tr><tr><th>First-trade requirement</th><td>MET (STRATEGY)</td></tr><tr><th>Challenge status</th><td>RUNNING</td></tr><tr><th>Strategy score (realized P&amp;L)</th><td>$0.00</td></tr><tr><th>Strategy trades</th><td>2</td></tr><tr><th>Exploration trades</th><td>0</td></tr><tr><th>Canary tests</th><td>0 (not run)</td></tr><tr><th>Exploration orders used</th><td>0 / 3</td></tr></table></section>
-  <section class="card"><h2>Signal funnel</h2><table class="kv"><tr><th>Markets discovered</th><td>60</td></tr><tr><th>Eligible markets</th><td>60</td></tr><tr><th>Candidates</th><td>25</td></tr><tr><th>Markets analyzed</th><td>25</td></tr><tr><th>Strategy signals</th><td>0</td></tr><tr><th>Signals rejected</th><td>25</td></tr><tr><th>Risk-approved orders</th><td>0</td></tr><tr><th>Paper orders executed</th><td>0</td></tr></table></section>
-  <section class="card"><h2>Equity curve</h2><svg viewBox="0 0 640 90" preserveAspectRatio="none" class="spark"><polyline fill="none" stroke="#ff6b6b" stroke-width="2" points="4.0,6.0 83.0,84.0 162.0,84.0 241.0,84.0 320.0,84.0 399.0,84.0 478.0,84.0 557.0,84.0 636.0,84.0"/></svg></section>
-  <section class="card"><h2>Rejection analytics</h2><table class="data"><thead><tr><th>Reason</th><th>Count</th><th>%</th></tr></thead><tbody><tr><td>INSUFFICIENT_EDGE</td><td>148</td><td>66.4%</td></tr><tr><td>MARKET_NEAR_RESOLVED</td><td>75</td><td>33.6%</td></tr></tbody></table></section>
-  <section class="card"><h2>System health</h2><table class="kv"><tr><th>Last successful cycle</th><td>2026-10-17T15:58:11+00:00</td></tr><tr><th>Last cycle</th><td>2026-10-17T15:58:11+00:00</td></tr><tr><th>Last API response</th><td>2026-10-17T15:58:11+00:00</td></tr><tr><th>API latency</th><td>83.2 ms</td></tr><tr><th>Data freshness</th><td>fresh</td></tr><tr><th>Database health</th><td>ok</td></tr><tr><th>Scheduler health</th><td>gap 194.9m</td></tr><tr><th>Config version</th><td>cfg-2026.10b</td></tr><tr><th>Strategy version</th><td>baseline-meanrev-v2</td></tr><tr><th>Software version</th><td>2.0.0</td></tr></table></section>
-</div>
-<section class="card"><h2>Trade history</h2><div class="scroll"><table class="data"><thead><tr><th>Time</th><th>Instrument</th><th>Side</th><th>Type</th><th>Entry</th><th>Exit</th><th>Qty</th><th>Fees</th><th>Slip</th><th>Realized P&L</th><th>Status</th></tr></thead><tbody><tr><td>2026-10-16T16:49:42+00:00</td><td class='q'>Maia: Marco Trungelliti vs Francesco Passaro</td><td>YES</td><td>STRATEGY</td><td>0.3303</td><td>-</td><td>30.30</td><td>0.0200</td><td>0.0100</td><td>0.0000</td><td>OPEN</td></tr><tr><td>2026-10-16T16:49:42+00:00</td><td class='q'>Dota 2: Team Synapse vs Dawn Bulls - Game 2 Winner</td><td>NO</td><td>STRATEGY</td><td>0.0010</td><td>-</td><td>9998.18</td><td>0.0200</td><td>0.0100</td><td>0.0000</td><td>OPEN</td></tr></tbody></table></div></section>
-<div class="foot">
-  <button onclick="location.reload()">Refresh</button>
-  <label><input type="checkbox" id="auto" onchange="toggleAuto()"> Auto-refresh (60s)</label>
-  <span class="muted">Last updated: 2026-10-17T15:58:22+00:00</span>
-</div>
-
-<script>
+<div class="topbar"><span class="status warn">DEGRADED</span><span class="pill">PAPER ONLY · REAL_TRADING=false</span><span class="pill">Provider polymarket (OK)</span><span class="pill">Last scan 2026-10-17T16:44:03+00:00</span><span class="pill">Now 2026-10-17T16:44:04+00:00</span></div><div class="wrap"><div class="alerts"><div class="alert warn">LIFECYCLE DEGRADED — the agent is not fully healthy.</div></div><div class="kpis"><div class="kpi hl"><div class="kpi-label">Current equity</div><div class="kpi-value hero">$991.23</div><div class="kpi-sub">Starting $1,000.00 · Return <span class="neg">-0.87%</span></div></div><div class="kpi hl"><div class="kpi-label">Lifetime P&amp;L</div><div class="kpi-value neg">$-8.69</div><div class="kpi-sub">Realized $0.00 · Unrealized $-8.69</div></div><div class="kpi"><div class="kpi-label">24h P&amp;L</div><div class="kpi-value neg">$-1.74</div><div class="kpi-sub">Since today's open</div></div><div class="kpi"><div class="kpi-label">Max drawdown</div><div class="kpi-value warnc">0.36%</div><div class="kpi-sub">Limit 10%</div></div></div><div class="kpis" style="margin-top:12px"><div class="kpi"><div class="kpi-label">Available cash</div><div class="kpi-value ">$960.03</div><div class="kpi-sub">Free to deploy</div></div><div class="kpi"><div class="kpi-label">Open exposure</div><div class="kpi-value ">$39.89</div><div class="kpi-sub">Cap 15%</div></div><div class="kpi"><div class="kpi-label">Open positions</div><div class="kpi-value ">4</div><div class="kpi-sub">Max 10</div></div><div class="kpi"><div class="kpi-label">Strategy trades</div><div class="kpi-value ">4</div><div class="kpi-sub">STRATEGY</div></div><div class="kpi"><div class="kpi-label">Exploration trades</div><div class="kpi-value ">0</div><div class="kpi-sub">EXPLORATION</div></div><div class="kpi"><div class="kpi-label">Canary tests</div><div class="kpi-value ">0</div><div class="kpi-sub">not run</div></div></div><section class="card "><h2>Challenge · 45-hour test</h2><div class="progress"><i style="width:53.1%"></i></div><table class="kv"><tr><th>Hours elapsed</th><td>23.9 / 45</td></tr><tr><th>Hours remaining</th><td>21.1h</td></tr><tr><th>First-trade deadline</th><td><span class="muted">0.1h left</span></td></tr><tr><th>First-trade requirement</th><td><span class="pos">MET · STRATEGY</span></td></tr><tr><th>Challenge status</th><td>RUNNING</td></tr><tr><th>Strategy score (realized P&amp;L)</th><td><span class="">$0.00</span></td></tr><tr><th>Exploration orders used</th><td>0 / 3</td></tr></table></section><section class="card "><h2>Open positions</h2><div class="scroll"><table class="data"><thead><tr><th>Instrument</th><th>Side</th><th>Qty</th><th>Entry</th><th>Mark</th><th>Unrealized</th><th>Type</th></tr></thead><tbody><tr><td class='q'>Maia: Marco Trungelliti vs Francesco Passaro</td><td>YES</td><td>30.30</td><td>0.3303</td><td>0.2650</td><td class='neg'>$-1.98</td><td>STRATEGY</td></tr><tr><td class='q'>Dota 2: Team Synapse vs Dawn Bulls - Game 2 Winner</td><td>NO</td><td>9998.18</td><td>0.0010</td><td>0.9995</td><td class='neg'>$-5.01</td><td>STRATEGY</td></tr><tr><td class='q'>Will FC Barcelona win on 2026-10-17?</td><td>NO</td><td>52.26</td><td>0.1902</td><td>0.8150</td><td class='neg'>$-0.27</td><td>STRATEGY</td></tr><tr><td class='q'>Will Real Betis Balompié win on 2026-10-17?</td><td>YES</td><td>141.81</td><td>0.0701</td><td>0.0600</td><td class='neg'>$-1.43</td><td>STRATEGY</td></tr></tbody></table></div></section><div class="grid2"><section class="card "><h2>Signal funnel</h2><div class="kpis"><div class="kpi"><div class="kpi-label">Discovered</div><div class="kpi-value ">60</div><div class="kpi-sub"></div></div><div class="kpi"><div class="kpi-label">Eligible</div><div class="kpi-value ">60</div><div class="kpi-sub"></div></div><div class="kpi"><div class="kpi-label">Analyzed</div><div class="kpi-value ">25</div><div class="kpi-sub"></div></div><div class="kpi"><div class="kpi-label">Signals</div><div class="kpi-value accent">2</div><div class="kpi-sub">passed the pipeline</div></div><div class="kpi"><div class="kpi-label">Rejected</div><div class="kpi-value warnc">23</div><div class="kpi-sub">see reasons below</div></div><div class="kpi"><div class="kpi-label">Executed</div><div class="kpi-value pos">2</div><div class="kpi-sub">paper orders</div></div></div></section><section class="card "><h2>Equity curve</h2><svg viewBox="0 0 640 130" preserveAspectRatio="none" class="spark"><polyline fill="none" stroke="#ff5d6c" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="6.0,8.0 75.8,66.3 145.6,66.3 215.3,66.3 285.1,66.3 354.9,66.3 424.7,66.3 494.4,66.3 564.2,66.3 634.0,122.0"/><circle cx="634.0" cy="122.0" r="5" fill="#ff5d6c"/></svg></section></div><div class="grid2"><section class="card "><h2>Rejection analytics</h2><div class="scroll"><table class="data"><thead><tr><th>Reason</th><th>Count</th><th>Share</th></tr></thead><tbody><tr><td>INSUFFICIENT_EDGE</td><td>162</td><td style='width:34%'><div class='bar'><i style='width:65.9%'></i></div></td></tr><tr><td>MARKET_NEAR_RESOLVED</td><td>84</td><td style='width:34%'><div class='bar'><i style='width:34.1%'></i></div></td></tr></tbody></table></div></section><section class="card "><h2>System health</h2><table class="kv"><tr><th>Last successful cycle</th><td>2026-10-17T16:43:54+00:00</td></tr><tr><th>Last API response</th><td>2026-10-17T16:43:54+00:00</td></tr><tr><th>API latency</th><td>77.5 ms</td></tr><tr><th>Database health</th><td><span class="pos">ok</span></td></tr><tr><th>Scheduler health</th><td><span class="neg">gap 45.7m</span></td></tr><tr><th>Config version</th><td>cfg-2026.10b</td></tr><tr><th>Strategy version</th><td>baseline-meanrev-v2</td></tr><tr><th>Software version</th><td>2.0.0</td></tr></table></section></div><section class="card "><h2>Trade history</h2><div class="scroll"><table class="data"><thead><tr><th>Time</th><th>Instrument</th><th>Side</th><th>Type</th><th>Entry</th><th>Exit</th><th>Qty</th><th>Fees</th><th>Realized P&amp;L</th><th>Status</th></tr></thead><tbody><tr><td>2026-10-17T16:44:03+00:00</td><td class='q'>Will FC Barcelona win on 2026-10-17?</td><td>NO</td><td>STRATEGY</td><td>0.1902</td><td>-</td><td>52.26</td><td>0.0199</td><td class=''>$0.00</td><td>OPEN</td></tr><tr><td>2026-10-17T16:44:03+00:00</td><td class='q'>Will Real Betis Balompié win on 2026-10-17?</td><td>YES</td><td>STRATEGY</td><td>0.0701</td><td>-</td><td>141.81</td><td>0.0199</td><td class=''>$0.00</td><td>OPEN</td></tr><tr><td>2026-10-16T16:49:42+00:00</td><td class='q'>Maia: Marco Trungelliti vs Francesco Passaro</td><td>YES</td><td>STRATEGY</td><td>0.3303</td><td>-</td><td>30.30</td><td>0.0200</td><td class=''>$0.00</td><td>OPEN</td></tr><tr><td>2026-10-16T16:49:42+00:00</td><td class='q'>Dota 2: Team Synapse vs Dawn Bulls - Game 2 Winner</td><td>NO</td><td>STRATEGY</td><td>0.0010</td><td>-</td><td>9998.18</td><td>0.0200</td><td class=''>$0.00</td><td>OPEN</td></tr></tbody></table></div></section></div><div class="foot"><button onclick="location.reload()">Refresh</button><label><input type="checkbox" id="auto" onchange="toggleAuto()"> Auto-refresh (60s)</label><span class="muted">Last updated 2026-10-17T16:44:04+00:00</span></div><script>
 let t=null;
 function toggleAuto(){
   const on=document.getElementById('auto').checked;
