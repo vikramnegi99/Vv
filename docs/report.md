@@ -1,6 +1,6 @@
 # Paper Trading Agent - Challenge Report
 
-- Generated: 2026-11-08T23:27:37+00:00
+- Generated: 2026-11-09T02:52:38+00:00
 - Software version: 2.0.0
 - Strategy version: baseline-meanrev-v2
 - Config version: cfg-2026.10b
@@ -14,7 +14,7 @@
 
 ## Challenge
 - Status: COMPLETE / lifecycle DEGRADED
-- Hours elapsed: 558.63
+- Hours elapsed: 562.05
 - First-trade requirement met: True
 - Canary completed: False
 - Deadline alert: False
@@ -29,15 +29,15 @@
 - eligible: 60
 - candidates: 25
 - analyzed: 25
-- signals: 3
-- rejected: 22
+- signals: 2
+- rejected: 23
 - risk_approved: 0
 - executed: 0
 
 ## Rejection reasons
-- INSUFFICIENT_EDGE: 1866
-- MARKET_NEAR_RESOLVED: 1298
-- RISK_MAX_POSITIONS: 40
+- INSUFFICIENT_EDGE: 1877
+- MARKET_NEAR_RESOLVED: 1310
+- RISK_MAX_POSITIONS: 42
 - RISK_POSITION_SIZE: 9
 - RISK_DUPLICATE_POSITION: 1
 
